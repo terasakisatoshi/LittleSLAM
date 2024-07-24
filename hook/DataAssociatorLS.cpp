@@ -12,16 +12,14 @@
  * @author Masahiro Tomono
  ****************************************************************************/
 
-#include <boost/timer.hpp>
 #include "DataAssociatorLS.h"
 
 using namespace std;
 
 // 現在スキャンcurScanの各スキャン点に対応する点をbaseLpsから見つける
 double DataAssociatorLS::findCorrespondence(const Scan2D *curScan, const Pose2D &predPose) {
-  boost::timer tim;                                 // 処理時間測定用
+  chrono_time t0 = clock();  
 
-  double dthre = 0.2;                               // これより遠い点は除外する[m]
   curLps.clear();                                   // 対応づけ現在スキャン点群を空にする
   refLps.clear();                                   // 対応づけ参照スキャン点群を空にする
   for (size_t i=0; i<curScan->lps.size(); i++) {
@@ -48,10 +46,11 @@ double DataAssociatorLS::findCorrespondence(const Scan2D *curScan, const Pose2D 
   }
   
   double ratio = (1.0*curLps.size())/curScan->lps.size();         // 対応がとれた点の比率
-//  printf("ratio=%g, clps.size=%lu\n", ratio, curScan->lps.size());
+//  printf("ratio=%g, clps.size=%zu\n", ratio, curScan->lps.size());
 
-//  double t1 = 1000*tim.elapsed();                               // 処理時間
-//  printf("Elapsed time: dassLS=%g\n", t1);
+  chrono_time t1 = clock();  
+  totalTime += duration(t0, t1);
+  ++timeCnt;
 
   return(ratio);
 }

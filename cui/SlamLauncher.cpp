@@ -12,8 +12,6 @@
  * @author Masahiro Tomono
  ****************************************************************************/
 
-#include <boost/algorithm/string/predicate.hpp>
-#include <boost/timer.hpp>
 #include "SlamLauncher.h"
 #include "ScanPointResampler.h"
 
@@ -32,7 +30,7 @@ void SlamLauncher::run() {
   double totalTime=0, totalTimeDraw=0, totalTimeRead=0;
   Scan2D scan;
   bool eof = sreader.loadScan(cnt, scan);  // ファイルからスキャンを1個読み込む
-  boost::timer tim;
+  chrono_time t0 = clock();
   while(!eof) {
     if (odometryOnly) {                      // オドメトリによる地図構築（SLAMより優先）
       if (cnt == 0) {
@@ -41,25 +39,26 @@ void SlamLauncher::run() {
       }
       mapByOdometry(&scan);
     }
-    else 
+    else {
       sfront.process(scan);                // SLAMによる地図構築
+    }
 
-    double t1 = 1000*tim.elapsed();
+    chrono_time t1 = clock();
 
     if (cnt%drawSkip == 0) {               // drawSkipおきに結果を描画
       mdrawer.drawMapGp(*pcmap);
     }
-    double t2 = 1000*tim.elapsed();
+    chrono_time t2 = clock();
 
     ++cnt;                                 // 論理時刻更新
     eof = sreader.loadScan(cnt, scan);     // 次のスキャンを読み込む
 
-    double t3 = 1000*tim.elapsed();
-    totalTime = t3;                        // 全体処理時間
-    totalTimeDraw += (t2-t1);              // 描画時間の合計
-    totalTimeRead += (t3-t2);              // ロード時間の合計
+    chrono_time t3 = clock();
+    totalTime = duration(t0, t3);          // 全体処理時間
+    totalTimeDraw += duration(t1, t2);              // 描画時間の合計
+    totalTimeRead += duration(t2, t3);              // ロード時間の合計
 
-    printf("---- SlamLauncher: cnt=%lu ends ----\n", cnt);
+    printf("---- SlamLauncher: cnt=%zu ends ----\n", cnt);
   }
   sreader.closeScanFile();
 
@@ -135,7 +134,7 @@ void SlamLauncher::showScans() {
 
     mdrawer.drawScanGp(scan);              // スキャン描画
 
-    printf("---- scan num=%lu ----\n", cnt);
+    printf("---- scan num=%zu ----\n", cnt);
     eof = sreader.loadScan(cnt, scan);
     ++cnt;
   }
@@ -156,9 +155,20 @@ bool SlamLauncher::setFilename(char *filename) {
 void SlamLauncher::customizeFramework() {
   fcustom.setSlamFrontEnd(&sfront);
   fcustom.makeFramework();
-//  fcustom.customizeG();                         // 退化の対処をしない
-//  fcustom.customizeH();                         // 退化の対処をする
-  fcustom.customizeI();                           // ループ閉じ込みをする
+//  fcustom.customizeA();                         // 第7章
+//  fcustom.customizeB();                         // 第8章
+//  fcustom.customizeC();                         // 第8章
+//  fcustom.customizeD();                         // 第8章
+//  fcustom.customizeE();                         // 第8章
+//  fcustom.customizeF();                         // 第8章
+//  fcustom.customizeG();                         // 第8章
+//  fcustom.customizeH();                         // 第9章 退化
+//  fcustom.customizeI();                         // 第10章 ループ閉じ込み
+//  fcustom.customizeJ();                         // 第11章 ガウス-ニュートン法
+//  fcustom.customizeK();                         // 第11章 ロバストコスト関数
+//  fcustom.customizeL();                         // 第11章 MAP推定
+//  fcustom.customizeM();                         // 第11章 kd木を用いたデータ対応づけ
+  fcustom.customizeN();                         // 第11章 ロバストループ閉じ込みをする
 
   pcmap = fcustom.getPointCloudMap();           // customizeの後にやること
 }

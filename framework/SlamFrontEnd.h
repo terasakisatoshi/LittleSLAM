@@ -16,7 +16,6 @@
 #define SLAM_FRONT_END_H_
 
 #include <vector>
-#include <boost/circular_buffer.hpp>
 #include "PointCloudMap.h"
 #include "ScanMatcher2D.h"
 #include "PoseGraph.h"
@@ -39,7 +38,7 @@ private:
   SlamBackEnd sback;                     // SLAMバックエンド
 
 public:
-  SlamFrontEnd()  : cnt(0), keyframeSkip(10), smat(nullptr), lpd(nullptr) {
+  SlamFrontEnd()  : cnt(0), keyframeSkip(10), pcmap(nullptr), smat(nullptr), lpd(nullptr) {
     pg = new PoseGraph();
     sback.setPoseGraph(pg);
   }
@@ -91,6 +90,10 @@ public:
   // デバッグ用
   std::vector<PoseCov> &getPoseCovs() {
     return(smat->getPoseCovs());
+  }
+
+  SlamBackEnd *getSlamBackend() {
+    return(&sback);
   }
 
 /////////

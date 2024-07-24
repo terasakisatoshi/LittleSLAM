@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
   if (argv[1][0] == '-') {
     for (int i=1; ; i++) {
       char option = argv[1][i];
-      if (option == NULL)
+      if (option == 0)
         break;
       else if (option == 's')        // スキャン表示のみ
         scanCheck = true;

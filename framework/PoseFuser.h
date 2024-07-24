@@ -34,7 +34,7 @@ public:
   CovarianceCalculator cvc;                 // 共分散計算器
 
 public:
-  PoseFuser() {
+  PoseFuser() : dass(nullptr) {
   }
 
   ~PoseFuser() {

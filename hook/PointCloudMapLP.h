@@ -15,7 +15,6 @@
 #ifndef POINT_CLOUD_MAP_LP_H_
 #define POINT_CLOUD_MAP_LP_H_
 
-#include <boost/unordered_map.hpp>
 #include "PointCloudMap.h"
 
 ///////////
@@ -42,7 +41,7 @@ struct Submap
       mps.emplace_back(lps[i]);
   }
 
-  std::vector<LPoint2D> subsamplePoints(int nthre);
+  std::vector<LPoint2D> subsamplePoints(size_t nthre);
 };
 
 ///////////
@@ -56,7 +55,7 @@ public:
   std::vector<Submap> submaps;              // 部分地図
 
 public:
-  PointCloudMapLP() {
+  PointCloudMapLP() : atd(0) {
     Submap submap;
     submaps.emplace_back(submap);           // 最初の部分地図を作っておく
   }

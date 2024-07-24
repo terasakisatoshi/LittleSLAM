@@ -4,3 +4,5 @@
 	* CMakeLists.txtは、日本語コメントを削除し、ASCIIとした。
 	（Ubuntu14.04のcmakeでエラーが出るのを防ぐため）
 	
+    2024-07-24  Masahiro Tomono
+	・書籍の改訂2版に合わせて、プログラムを更新した。

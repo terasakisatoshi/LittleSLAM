@@ -31,7 +31,7 @@ void PointCloudMapGT::subsamplePoints(vector<LPoint2D> &sps) {
 
   nntab.makeCellPoints(nthre, sps);         // nthre点以上あるセルから代表点を得る
 
-  printf("allLps.size=%lu, sps.size=%lu\n", allLps.size(), sps.size());  // 確認用
+  printf("allLps.size=%zu, sps.size=%zu\n", allLps.size(), sps.size());  // 確認用
 }
 
 /////////
@@ -47,13 +47,13 @@ void PointCloudMapGT::makeGlobalMap(){
   globalMap.clear();
   subsamplePoints(globalMap);         // 格子テーブルの各セルの代表点から全体地図を作る
 
-  printf("GT: globalMap.size=%lu\n", globalMap.size());    // 確認用
+  printf("GT: globalMap.size=%zu\n", globalMap.size());    // 確認用
 }
 
 // 局所地図の生成。全体地図をそのまま使う
 void PointCloudMapGT::makeLocalMap(){
   localMap = globalMap;
-  printf("GT: localMap.size=%lu\n", localMap.size());
+  printf("GT: localMap.size=%zu\n", localMap.size());
 }
 
 ////////

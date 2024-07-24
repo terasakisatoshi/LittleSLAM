@@ -48,11 +48,11 @@ bool LoopDetectorSS::detectLoop(Scan2D *curScan, Pose2D &curPose, int cnt) {
         imin = i;                                      // 候補となる部分地図のインデックス
         jmin = j;                                      // 前回訪問点のインデックス
       }
-//      printf("i=%lu, j=%lu: atd=%g, atdR=%g, atdthre=%g\n", i, j, atd, atdR, atdthre);             // 確認用
+//      printf("i=%zu, j=%zu: atd=%g, atdR=%g, atdthre=%g\n", i, j, atd, atdR, atdthre);             // 確認用
     }
   }
 
-  printf("dmin=%g, radius=%g, imin=%lu, jmin=%lu\n", sqrt(dmin), radius, imin, jmin);  // 確認用
+  printf("dmin=%g, radius=%g, imin=%zu, jmin=%zu\n", sqrt(dmin), radius, imin, jmin);  // 確認用
 
   if (dmin > radius*radius)                            // 前回訪問点までの距離が遠いとループ検出しない
     return(false);
@@ -69,7 +69,7 @@ bool LoopDetectorSS::detectLoop(Scan2D *curScan, Pose2D &curPose, int cnt) {
 
   if (flag) {                                          // ループを検出した
     Eigen::Matrix3d icpCov;                                                  // ICPの共分散
-    double ratio = pfu->calIcpCovariance(revisitPose, curScan, icpCov);      // ICPの共分散を計算
+    pfu->calIcpCovariance(revisitPose, curScan, icpCov);      // ICPの共分散を計算
 
     LoopInfo info;                                     // ループ検出結果
     info.pose = revisitPose;                           // ループアーク情報に再訪点位置を設定
@@ -142,7 +142,6 @@ bool LoopDetectorSS::estimateRevisitPose(const Scan2D *curScan, const vector<LPo
   double rangeA = 45;                                    // 回転の探索範囲[度]
   double dd = 0.2;                                       // 並進の探索間隔[m]
   double da = 2;                                         // 回転の探索間隔[度]
-  double pnrateMax=0;
   vector<double> pnrates;
   double scoreMin=1000;
   vector<double> scores;
@@ -156,7 +155,7 @@ bool LoopDetectorSS::estimateRevisitPose(const Scan2D *curScan, const vector<LPo
         Pose2D pose(x, y, th);
         double mratio = dass->findCorrespondence(curScan, pose);   // 位置poseでデータ対応づけ
         size_t usedNum = dass->curLps.size();
-//        printf("usedNum=%lu, mratio=%g\n", usedNum, mratio);          // 確認用
+//        printf("usedNum=%zu, mratio=%g\n", usedNum, mratio);          // 確認用
         if (usedNum < usedNumMin || mratio < 0.9)        // 対応率が悪いと飛ばす
           continue;
         cfunc->setPoints(dass->curLps, dass->refLps);    // コスト関数に点群を設定
@@ -174,7 +173,7 @@ bool LoopDetectorSS::estimateRevisitPose(const Scan2D *curScan, const vector<LPo
       }
     }
   }
-  printf("candidates.size=%lu\n", candidates.size());                           // 確認用
+  printf("candidates.size=%zu\n", candidates.size());                           // 確認用
   if (candidates.size() == 0)
     return(false);
 
@@ -190,9 +189,10 @@ bool LoopDetectorSS::estimateRevisitPose(const Scan2D *curScan, const vector<LPo
     double pnrate = estim->getPnrate();                     // ICPでの点の対応率
     size_t usedNum = estim->getUsedNum();                   // ICPで使用した点数
     if (score < smin && pnrate >= 0.9 && usedNum >= usedNumMin) {  // ループ検出は条件厳しく
+//    if (score < smin && usedNum >= usedNumMin) {  // ループ検出は条件厳しく
       smin = score;
       best = estP;
-      printf("smin=%g, pnrate=%g, usedNum=%lu\n", smin, pnrate, usedNum);    // 確認用
+      printf("smin=%g, pnrate=%g, usedNum=%zu\n", smin, pnrate, usedNum);    // 確認用
     }
   }
 

@@ -41,7 +41,7 @@ public:
 
 public:
 
-  PoseEstimatorICP() : usedNum(0), pnrate(0), totalError(0), totalTime(0) {
+  PoseEstimatorICP() : curScan(nullptr), usedNum(0), pnrate(0), popt(nullptr), dass(nullptr), totalError(0), totalTime(0) {
   }
 
   ~PoseEstimatorICP() {

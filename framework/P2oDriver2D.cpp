@@ -32,7 +32,6 @@ void P2oDriver2D::doP2o( PoseGraph &pg, vector<Pose2D> &newPoses, int N) {
     pnodes.push_back(p2o::Pose2D(pose.tx, pose.ty, DEG2RAD(pose.th)));   // 位置だけ入れる
   }
 
-
   // ポーズアークをkslam用に変換
   p2o::Con2DVec pcons;                             // p2oのポーズアーク集合
   for (size_t i=0; i<arcs.size(); i++) {
@@ -50,7 +49,7 @@ void P2oDriver2D::doP2o( PoseGraph &pg, vector<Pose2D> &newPoses, int N) {
     pcons.push_back(con);
   }
 
-//  printf("knodes.size=%lu, kcons.size=%lu\n", knodes.size(), kcons.size());    // 確認用
+//  printf("knodes.size=%zu, kcons.size=%zu\n", knodes.size(), kcons.size());    // 確認用
 
   p2o::Optimizer2D opt;                                          // p2oインスタンス
   std::vector<p2o::Pose2D> result = opt.optimizePath(pnodes, pcons, N);  // N回実行

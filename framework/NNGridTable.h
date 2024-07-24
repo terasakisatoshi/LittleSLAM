@@ -34,15 +34,16 @@ struct NNGridCell
 class NNGridTable
 {
 private:
+  double dthre;
   double csize;                       // セルサイズ[m]
   double rsize;                       // 対象領域のサイズ[m]。正方形の1辺の半分。
   int tsize;                          // テーブルサイズの半分
   std::vector<NNGridCell> table;      // テーブル本体
 
 public:
-  NNGridTable() : csize(0.05), rsize(40){            // セル5cm、対象領域40x2m四方
+  NNGridTable() : dthre(0.2), csize(0.05), rsize(40){            // セル5cm、対象領域40x2m四方
     tsize = static_cast<int>(rsize/csize);           // テーブルサイズの半分
-    size_t w = static_cast<int>(2*tsize+1);          // テーブルサイズ
+    size_t w = 2*static_cast<size_t>(tsize)+1;       // テーブルサイズ
     table.resize(w*w);                               // 領域確保
     clear();                                         // tableの初期化
   }
@@ -54,12 +55,16 @@ public:
     for (size_t i=0; i<table.size(); i++)
       table[i].clear();                         // 各セルを空にする
   }
+
+  void setDthre(double d) {
+    dthre = d;
+  }
   
 ////////////
 
   void addPoint(const LPoint2D *lp);
   const LPoint2D *findClosestPoint(const LPoint2D *clp, const Pose2D &predPose);
-  void makeCellPoints(int nthre, std::vector<LPoint2D> &ps);
+  void makeCellPoints(size_t nthre, std::vector<LPoint2D> &ps);
 };
 
 #endif

@@ -15,7 +15,6 @@
 #ifndef POINT_CLOUD_MAP_GT_H_
 #define POINT_CLOUD_MAP_GT_H_
 
-#include <boost/unordered_map.hpp>
 #include "PointCloudMap.h"
 #include "NNGridTable.h"
 

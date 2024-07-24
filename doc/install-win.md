@@ -21,11 +21,20 @@ Windowsの環境変数Pathにgnuplotのパスを設定しておきます。
 - CMake  
 [CMake](https://cmake.org/)をダウンロードしてインストールします。
 
+- git  
+[git](https://gitforwindows.org/)をダウンロードしてインストールします。
+
 - p2o  
-[p2o](https://github.com/furo-org/p2o)のGithubサイトを開きます。以下のどちらかの方法でp2oをダウンロードします。  
+[p2o-v1](https://github.com/furo-org/p2o/tree/p2o_v1)のGithubサイトを開きます。
+以下のどちらかの方法でp2oをダウンロードします。  
 (A) Github画面の"Clone or download"ボタンを押して、"Download ZIP"を選択し、
-p2o-master.zipをダウンロードします。zipファイルの展開方法は後述します。  
-(B) gitを使って、リポジトリをcloneします。  
+p2o-p2o_v1.zipをダウンロードします。zipファイルの展開方法は後述します。  
+(B) gitを使って、LittleSLAMのサブモジュールとしてリポジトリをcloneします（下記参照）。 
+
+- nanoflann  
+[nanoflann](https://github.com/jlblancoc/nanoflann)のGithub画面の"Clone or download"ボタンを押して、
+"Download ZIP"を選択し、nanoflann-master.zipをダウンロードします。
+zipファイルの展開方法は後述します。  
 
 ### (2) LittleSLAMのインストール
 
@@ -38,15 +47,21 @@ LittleSLAM-master.zipをダウンロードします。
 ここでは、たとえば、"C:\abc\LittleSLAM"に展開するとします。
 "abc"はユーザが決める任意のフォルダです。
 LittleSLAM-master.zipの中の"LittleSLAM-master"フォルダの下の
-4個のフォルダと3個のファイルを"C:\abc\LittleSLAM"の下にコピーします。  
-(B) gitを使って、リポジトリをcloneします。  
+p2o以外の4個のフォルダと3個のファイルを"C:\abc\LittleSLAM"の下にコピーします。  
+(B) gitでrecursiveオプションをつけてリポジトリをcloneします。
 ```
 git clone --recursive https://github.com/furo-org/LittleSLAM.git
 ```
-この方法を使った場合は次の「p2oの展開」の操作は不要です。
 
-- p2oの展開   
-前述のp2o-master.zipの中のファイル"p2o.h"を"C:\abc\LittleSLAM\p2o"の下にコピーします。  
+- p2oの展開（上記(A)の場合のみ）  
+"C:\abc\LittleSLAM"フォルダの下に"p2o"フォルダを作成します。そして、
+前述のp2o-p2o_v1.zipを解凍して、"p2o-p2o_v1"フォルダの下のファイル"p2o.h"を"C:\abc\LittleSLAM\p2o"フォルダの下にコピーします。 
+
+- nanoflannの展開（上記(A)(B)両方）  
+"C:\abc\LittleSLAM"フォルダの下に"nanoflann"フォルダを作成します。そして、
+前述のnanoflann-master.zipを解凍して、"nanoflann-master\include"フォルダの下の
+ファイル"nanoflann.h"を"C:\abc\LittleSLAM\nanoflann"フォルダの下にコピーします。 
+
 
 - buildフォルダの作成  
 "C:\abc\LittleSLAM"の下にbuildフォルダを作成します。  
@@ -86,11 +101,11 @@ ENDIF()
 ```  
 
 - Visual studioの起動  
-"C:\abc\LittleSLAM\build"の下にLittleSLAM.slnができているので、
+CMakeを実行すると"C:\abc\LittleSLAM\build"の下にLittleSLAM.slnができるので、
 それをダブルクリックすると、Visual studioが起動します。
 
 - ビルド  
-下図のように、Visual studioで、Release, x64（64ビットの場合）を指定し、BuildメニューからBuild Solutionを実行します。
+下図のように、Visual studioで、Release, x64（64ビットの場合）を指定し、Buildメニューから「ソリューションのビルド」を実行します。
 
 ![cmake](images/build.png)
 

@@ -30,7 +30,8 @@
 // ICPを用いてスキャンマッチングを行う
 class ScanMatcher2D
 {
-private:
+//private:
+protected:
   int cnt;                                // 論理時刻。スキャン番号に対応
   Scan2D prevScan;                        // 1つ前のスキャン
   Pose2D initPose;                        // 地図の原点の位置。通常(0,0,0)
@@ -52,7 +53,7 @@ private:
   std::vector<PoseCov> poseCovs;          // デバッグ用
 
 public:
-  ScanMatcher2D() : cnt(-1), scthre(1.0), nthre(50), dgcheck(false), atd(0), pcmap(nullptr), spres(nullptr), spana(nullptr), estim(nullptr), rsm(nullptr), pfu(nullptr) {
+  ScanMatcher2D() : cnt(-1), scthre(1.0), nthre(50), atd(0), dgcheck(false), estim(nullptr), pcmap(nullptr), spres(nullptr), spana(nullptr), rsm(nullptr), pfu(nullptr) {
   }
 
   ~ScanMatcher2D() {
@@ -113,7 +114,7 @@ public:
   
 //////////
 
-  bool matchScan(Scan2D &scan);
+  virtual bool matchScan(Scan2D &scan);
   void growMap(const Scan2D &scan, const Pose2D &pose);
 
 };

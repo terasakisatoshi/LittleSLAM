@@ -1,7 +1,5 @@
 PROJECT(framework)
 
-cmake_minimum_required(VERSION 2.8)
-
 find_package(Boost REQUIRED)
 
 find_package(Eigen3)
@@ -23,7 +21,9 @@ SET(fw_HDRS
     CostFunction.h
     PoseGraph.h
     P2oDriver2D.h
+    RobustP2oDriver2D.h
     ScanMatcher2D.h
+    ScanMatcherRB.h
     PoseFuser.h
     CovarianceCalculator.h
     DataAssociator.h
@@ -32,6 +32,7 @@ SET(fw_HDRS
     SlamFrontEnd.h
     SlamBackEnd.h
     LoopDetector.h
+    NNFinder2D.h
 )
 
 SET(fw_SRCS 
@@ -43,7 +44,9 @@ SET(fw_SRCS
     PoseEstimatorICP.cpp
     PoseGraph.cpp
     P2oDriver2D.cpp
+    RobustP2oDriver2D.cpp
     ScanMatcher2D.cpp
+    ScanMatcherRB.cpp
     PoseFuser.cpp
     CovarianceCalculator.cpp
     NNGridTable.cpp
@@ -51,15 +54,18 @@ SET(fw_SRCS
     SlamFrontEnd.cpp
     SlamBackEnd.cpp
     LoopDetector.cpp
+    NNFinder2D.cpp
 )
 
 include_directories(
     ${Boost_INCLUDE_DIR}
     ${EIGEN3_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/../p2o
+    ${CMAKE_CURRENT_SOURCE_DIR}/../nanoflann
 )
 
 link_directories(
+  ${BOOST_LIBRARY_DIR}  
 )
 
 ADD_LIBRARY(framework ${fw_SRCS} ${fw_HDRS})

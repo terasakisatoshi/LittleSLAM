@@ -1,7 +1,5 @@
 PROJECT(hook)
 
-cmake_minimum_required(VERSION 2.8)
-
 find_package(Boost REQUIRED)
 
 find_package(Eigen3)
@@ -16,8 +14,11 @@ SET(hk_HDRS
     CostFunctionPD.h
     PoseOptimizerSD.h
     PoseOptimizerSL.h
-    DataAssociatorLS.h
+    PoseOptimizerGN.h
+    PoseOptimizerMAP.h
     DataAssociatorGT.h
+    DataAssociatorLS.h
+    DataAssociatorNN.h
     PointCloudMapBS.h
     PointCloudMapGT.h
     PointCloudMapLP.h
@@ -31,8 +32,11 @@ SET(hk_SRCS
     CostFunctionPD.cpp
     PoseOptimizerSD.cpp
     PoseOptimizerSL.cpp
-    DataAssociatorLS.cpp
+    PoseOptimizerGN.cpp
+    PoseOptimizerMAP.cpp
     DataAssociatorGT.cpp
+    DataAssociatorLS.cpp
+    DataAssociatorNN.cpp
     PointCloudMapBS.cpp
     PointCloudMapGT.cpp
     PointCloudMapLP.cpp
@@ -43,6 +47,7 @@ include_directories(
     ${Boost_INCLUDE_DIR}
     ${EIGEN3_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/../framework
+    ${CMAKE_CURRENT_SOURCE_DIR}/../nanoflann
 )
 
 link_directories(
