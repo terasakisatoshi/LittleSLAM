@@ -73,7 +73,7 @@ protected:
   std::vector<LoopMatch> loopMatches;          // デバッグ用
 
 public:
-  LoopDetector() {
+  LoopDetector() : pg(nullptr) {
   }
 
   ~LoopDetector() {

@@ -36,7 +36,7 @@ bool SensorDataReader::loadLaserScan(size_t cnt, Scan2D &scan) {
   string type;                           // ファイル内の項目ラベル
   inFile >> type;
   if (type == "LASERSCAN") {             // スキャンの場合
-    scan.setSid(cnt);
+    scan.setSid(static_cast<int>(cnt));
 
     int sid, sec, nsec;
     inFile >> sid >> sec >> nsec;        // これらは使わない
@@ -55,7 +55,7 @@ bool SensorDataReader::loadLaserScan(size_t cnt, Scan2D &scan) {
       }
 
       LPoint2D lp;
-      lp.setSid(cnt);                    // スキャン番号はcnt（通し番号）にする
+      lp.setSid(static_cast<int>(cnt));  // スキャン番号はcnt（通し番号）にする
       lp.calXY(range, angle);            // angle,rangeから点の位置xyを計算
       lps.emplace_back(lp);
     }

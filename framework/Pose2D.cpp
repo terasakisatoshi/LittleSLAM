@@ -43,8 +43,6 @@ void Pose2D::globalPoint(const LPoint2D &pi, LPoint2D &po) const {
 // 基準座標系bposeから見た現座標系nposeの相対位置relPoseを求める（Inverse compounding operator）
 void Pose2D::calRelativePose(const Pose2D &npose, const Pose2D &bpose, Pose2D &relPose) {
   const double (*R0)[2] = bpose.Rmat;           // 基準座標系
-  const double (*R1)[2] = npose.Rmat;           // 現座標系
-  double (*R2)[2] = relPose.Rmat;               // 相対位置
 
   // 並進
   double dx = npose.tx - bpose.tx;
@@ -66,8 +64,6 @@ void Pose2D::calRelativePose(const Pose2D &npose, const Pose2D &bpose, Pose2D &r
 // 基準座標系bposeから相対位置relPoseだけ進んだ、座標系nposeを求める（Compounding operator）
 void Pose2D::calGlobalPose(const Pose2D &relPose, const Pose2D &bpose, Pose2D &npose) {
   const double (*R0)[2] = bpose.Rmat;           // 基準座標系
-  const double (*R1)[2] = relPose.Rmat;         // 相対位置
-  double (*R2)[2] = npose.Rmat;                 // 新座標系
 
   // 並進
   double tx = relPose.tx;

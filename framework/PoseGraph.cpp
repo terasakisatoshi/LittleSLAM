@@ -82,14 +82,14 @@ PoseArc *PoseGraph::findArc(int srcNid, int dstNid) {
 // 確認用
 void PoseGraph::printNodes() {
   printf("--- printNodes ---\n");
-  printf("nodes.size=%lu\n", nodes.size());
+  printf("nodes.size=%zu\n", nodes.size());
   for (size_t i=0; i<nodes.size(); i++) {
     PoseNode *node = nodes[i];
-    printf("i=%lu: nid=%d, tx=%g, ty=%g, th=%g\n", i, node->nid, node->pose.tx, node->pose.ty, node->pose.th);
+    printf("i=%zu: nid=%d, tx=%g, ty=%g, th=%g\n", i, node->nid, node->pose.tx, node->pose.ty, node->pose.th);
 
     for (size_t j=0; j<node->arcs.size(); j++) {
       PoseArc *a = node->arcs[j];
-      printf("arc j=%lu: srcId=%d, dstId=%d, src=%p, dst=%p\n", j, a->src->nid, a->dst->nid, a->src, a->dst);
+      printf("arc j=%zu: srcId=%d, dstId=%d, src=%p, dst=%p\n", j, a->src->nid, a->dst->nid, a->src, a->dst);
     }
   }
 }
@@ -97,12 +97,12 @@ void PoseGraph::printNodes() {
 // 確認用
 void PoseGraph::printArcs() {
   printf("--- printArcs ---\n");
-  printf("arcs.size=%lu\n", arcs.size());
+  printf("arcs.size=%zu\n", arcs.size());
   for (size_t j=0; j<arcs.size(); j++) {
     PoseArc *a = arcs[j];
-    double dis = (a->src->pose.tx - a->dst->pose.tx)*(a->src->pose.tx - a->dst->pose.tx) + (a->src->pose.ty - a->dst->pose.ty)*(a->src->pose.ty - a->dst->pose.ty);
+//    double dis = (a->src->pose.tx - a->dst->pose.tx)*(a->src->pose.tx - a->dst->pose.tx) + (a->src->pose.ty - a->dst->pose.ty)*(a->src->pose.ty - a->dst->pose.ty);
 
     Pose2D &rpose = a->relPose;
-    printf("j=%lu, srcId=%d, dstId=%d, tx=%g, ty=%g, th=%g\n", j, a->src->nid, a->dst->nid, rpose.tx, rpose.ty, rpose.th);
+    printf("j=%zu, srcId=%d, dstId=%d, tx=%g, ty=%g, th=%g\n", j, a->src->nid, a->dst->nid, rpose.tx, rpose.ty, rpose.th);
   }
 }

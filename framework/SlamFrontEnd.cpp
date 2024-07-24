@@ -63,7 +63,7 @@ void SlamFrontEnd::process(Scan2D &scan) {
     }
   }
 
-  printf("pcmap.size=%lu\n", pcmap->globalMap.size());   // 確認用
+  printf("pcmap.size=%zu\n", pcmap->globalMap.size());   // 確認用
 
   countLoopArcs();            // 確認用
 

@@ -22,7 +22,7 @@ double PointCloudMapLP::atdThre = 10;
 ///////////
 
 // 格子テーブルを用いて、部分地図の代表点を得る
-vector<LPoint2D> Submap::subsamplePoints(int nthre) {
+vector<LPoint2D> Submap::subsamplePoints(size_t nthre) {
   NNGridTable nntab;                     // 格子テーブル
   for (size_t i=0; i<mps.size(); i++) {
     LPoint2D &lp = mps[i];
@@ -31,7 +31,7 @@ vector<LPoint2D> Submap::subsamplePoints(int nthre) {
 
   vector<LPoint2D> sps;
   nntab.makeCellPoints(nthre, sps);      // nthre個以上のセルの代表点をspsに入れる
-  printf("mps.size=%lu, sps.size=%lu\n", mps.size(), sps.size());
+  printf("mps.size=%zu, sps.size=%zu\n", mps.size(), sps.size());
 
   return(sps);
 }
@@ -96,8 +96,8 @@ void PointCloudMapLP::makeGlobalMap(){
   }
 
   // 以下は確認用
-  printf("curSubmap.atd=%g, atd=%g, sps.size=%lu\n", curSubmap.atdS, atd, sps.size());
-  printf("submaps.size=%lu, globalMap.size=%lu\n", submaps.size(), globalMap.size());
+  printf("curSubmap.atd=%g, atd=%g, sps.size=%zu\n", curSubmap.atdS, atd, sps.size());
+  printf("submaps.size=%zu, globalMap.size=%zu\n", submaps.size(), globalMap.size());
 }
 
 // 局所地図の生成
@@ -118,7 +118,7 @@ void PointCloudMapLP::makeLocalMap(){
     localMap.emplace_back(sps[i]);
   }
 
-  printf("localMap.size=%lu\n", localMap.size());   // 確認用
+  printf("localMap.size=%zu\n", localMap.size());   // 確認用
 }
 
 //////////
@@ -154,8 +154,12 @@ void PointCloudMapLP::remakeMaps(const vector<Pose2D> &newPoses){
 
   makeGlobalMap();                                     // 部分地図から全体地図と局所地図を生成
 
+  printf("lastPose=(%g %g %g)\n", lastPose.tx, lastPose.ty, lastPose.th);  
+
   for (size_t i=0; i<poses.size(); i++) {              // posesをポーズ調整後の値に更新
     poses[i] = newPoses[i];
   }
   lastPose = newPoses.back();
+
+  printf("lastPose=(%g %g %g)\n", lastPose.tx, lastPose.ty, lastPose.th);  
 }

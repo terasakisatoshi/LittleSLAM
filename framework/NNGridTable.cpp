@@ -50,8 +50,9 @@ const LPoint2D *NNGridTable::findClosestPoint(const LPoint2D *clp, const Pose2D 
   size_t pn=0;                            // 探したセル内の点の総数。確認用
   double dmin=1000000;
   const LPoint2D *lpmin = nullptr;        // 最も近い点（目的の点）
-  double dthre=0.2;                       // これより遠い点は除外する[m]
   int R=static_cast<int>(dthre/csize);
+
+//  printf("R=%d\n", R);
 
   // ±R四方を探す
   for (int i=-R; i<=R; i++) {
@@ -86,7 +87,7 @@ const LPoint2D *NNGridTable::findClosestPoint(const LPoint2D *clp, const Pose2D 
 ////////////
 
 // 格子テーブルの各セルの代表点を作ってpsに格納する。
-void NNGridTable::makeCellPoints(int nthre, vector<LPoint2D> &ps) {
+void NNGridTable::makeCellPoints(size_t nthre, vector<LPoint2D> &ps) {
   // 現状はセル内の各点のスキャン番号の平均をとる。
   // スキャン番号の最新値をとる場合は、その部分のコメントをはずし、
   // 平均とる場合（2行）をコメントアウトする。
@@ -115,7 +116,7 @@ void NNGridTable::makeCellPoints(int nthre, vector<LPoint2D> &ps) {
       double L = sqrt(nx*nx + ny*ny);
       nx /=  L;                          // 平均（正規化）
       ny /=  L;
-      sid /= lps.size();                 // スキャン番号の平均とる場合
+      sid /= static_cast<int>(lps.size());                 // スキャン番号の平均とる場合
 
       LPoint2D newLp(sid, gx, gy);       // セルの代表点を生成
       newLp.setNormal(nx, ny);           // 法線ベクトル設定

@@ -49,7 +49,7 @@ bool ScanMatcher2D::matchScan(Scan2D &curScan) {
 
   const Scan2D *refScan = rsm->makeRefScan();                    // 参照スキャンの生成
   estim->setScanPair(&curScan, refScan);                         // ICPにスキャンを設定
-  printf("curScan.size=%lu, refScan.size=%lu\n", curScan.lps.size(), refScan->lps.size());
+  printf("curScan.size=%zu, refScan.size=%zu\n", curScan.lps.size(), refScan->lps.size());
 
   Pose2D estPose;                                                // ICPによる推定位置
   double score = estim->estimatePose(predPose, estPose);         // 予測位置を初期値にしてICPを実行
@@ -60,7 +60,7 @@ bool ScanMatcher2D::matchScan(Scan2D &curScan) {
     successful = true;
   else 
     successful = false;
-  printf("score=%g, usedNum=%lu, successful=%d\n", score, usedNum, successful);
+  printf("score=%g, usedNum=%zu, successful=%d\n", score, usedNum, successful);
 
   if (dgcheck) {                         // 退化の対処をする場合
     if (successful) {

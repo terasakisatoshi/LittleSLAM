@@ -34,8 +34,11 @@ protected:
 
   CostFunction *cfunc;          // コスト関数
 
+  double totalTime;                            // 調査用
+  int timeCnt;                                 // 調査用
+
 public:
-  PoseOptimizer(): evthre(0.000001), dd(0.00001), da(0.00001), cfunc(nullptr) {
+  PoseOptimizer(): evthre(0.000001), dd(0.00001), da(0.00001), cfunc(nullptr), totalTime(0), timeCnt(0) {
     allN=0; sum=0;
   }
 
@@ -52,13 +55,14 @@ public:
     cfunc->setEvlimit(l);
   }
 
-  void setPoints(std::vector<const LPoint2D*> &curLps, std::vector<const LPoint2D*> &refLps) {
+  virtual void setPoints(std::vector<const LPoint2D*> &curLps, std::vector<const LPoint2D*> &refLps) {
     cfunc->setPoints(curLps, refLps);
   }
 
   void setEvthre(double inthre) {
     this->evthre = inthre;
   }
+
   double getPnrate() {
     return (cfunc->getPnrate());
   }
@@ -66,6 +70,11 @@ public:
   void setDdDa(double d, double a){
     dd = d;
     da = a;
+  }
+  
+  void averageProcTime() {
+    double avg = totalTime/timeCnt;
+    printf("PoseOptimizer: average processing time=%g\n", avg);
   }
 
 ////////

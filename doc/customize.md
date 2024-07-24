@@ -19,28 +19,34 @@ LittleSLAMは、学習用プログラムとして、これらの技術に関し�
 | customizeG          | スキャンマッチング改良形6 | 
 | customizeH          | センサ融合による退化の対処 |
 | customizeI          | ループ閉じ込み |
+| customizeJ          | ガウスニュートン法によるスキャンマッチングの高速化 |
+| customizeK          | M推定によるスキャンマッチングのロバスト化 |
+| customizeL          | MAP推定による退化の対処 |
+| customizeM          | kd木を用いたデータ対応づけ |
+| customizeN          | ループ閉じ込みのロバスト化|
 
 
 カスタマイズのタイプは、SlamLauncher.cppの
 関数customizeFrameworkの中で、下記のように指定します。
 表のタイプがそのまま関数名であり、指定したい関数を書いて、
 それ以外はコメントアウトします。  
-デフォルトは、customizeIになっています。
+デフォルトは、customizeNになっています。
 
 ```C++
 
 void SlamLauncher::customizeFramework() {
   fcustom.setSlamFrontEnd(&sfront);
   fcustom.makeFramework();
-//  fcustom.customizeG();                   // 使わないのでコメントアウト
-  fcustom.customizeI();                     // このカスタマイズを指定
+//  fcustom.customizeI();                   // 使わないのでコメントアウト
+//  fcustom.customizeM();                   // 使わないのでコメントアウト
+  fcustom.customizeN();                     // このカスタマイズを指定
 
   pcmap = fcustom.getPointCloudMap();
 }
 
 ```  
 
-また、関数customizeX（X=A to I）は、cui/FrameworkCustomizer.cppで定義されています。  
+また、関数customizeX（X=A to N）は、cui/FrameworkCustomizer.cppで定義されています。  
 ユーザが新しいcustomizeXを作って試すことも可能です。
 
 

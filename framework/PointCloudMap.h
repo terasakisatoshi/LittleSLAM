@@ -27,7 +27,7 @@ class PointCloudMap
 public:
   static const int MAX_POINT_NUM=1000000;          // globalMapの最大点数
 
-  int nthre;                                       // 格子テーブルセル点数閾値(GTとLPのみ）
+  size_t nthre;                                       // 格子テーブルセル点数閾値(GTとLPのみ）
 
   std::vector<Pose2D> poses;                       // ロボット軌跡
   Pose2D lastPose;                                 // 最後に推定したロボット位置
@@ -45,7 +45,7 @@ public:
 
 ///////
 
-  void setNthre(int n) {
+  void setNthre(size_t n) {
     nthre = n;
   }
 
@@ -54,7 +54,9 @@ public:
   }
 
   Pose2D getLastPose() const {
-    return(lastPose);
+//    return(lastPose);
+    Pose2D pose = poses.back();
+    return(pose);
   }
 
   void setLastScan(const Scan2D &s) {

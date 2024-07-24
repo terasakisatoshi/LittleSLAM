@@ -18,6 +18,8 @@
 #include <cmath>
 #include <Eigen/Core>
 #include <Eigen/Eigen>
+#include <boost/cstdint.hpp>
+#include <chrono>
 
 #ifndef M_PI
 #define M_PI 3.14159265358979             // 円周率
@@ -29,6 +31,12 @@
 
 #define DEG2RAD(x) ((x)*M_PI/180)  // 度からラジアン
 #define RAD2DEG(x) ((x)*180/M_PI)  // ラジアンから度
+
+typedef std::chrono::system_clock::time_point chrono_time;
+#define clock() std::chrono::system_clock::now() 
+inline double duration(chrono_time start, chrono_time end) {
+  return std::chrono::duration_cast<std::chrono::microseconds>(end - start).count()*0.001;       // in milliseconds
+}
 
 typedef unsigned char uchar;
 

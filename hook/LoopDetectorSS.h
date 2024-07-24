@@ -38,7 +38,7 @@ private:
   PoseFuser *pfu;                              // センサ融合器
 
 public:
-  LoopDetectorSS() : radius(4), atdthre(10), scthre(0.2) {
+  LoopDetectorSS() : radius(4), atdthre(10), scthre(0.2), pcmap(nullptr), cfunc(nullptr), estim(nullptr), dass(nullptr), pfu(nullptr) {
   }
 
   ~LoopDetectorSS() {

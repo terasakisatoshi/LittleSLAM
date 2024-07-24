@@ -1,7 +1,5 @@
 project(cui)
 
-cmake_minimum_required(VERSION 2.8)
-
 find_package(Boost REQUIRED)
 
 find_package(Eigen3)
@@ -9,12 +7,15 @@ IF(NOT EIGEN3_INCLUDE_DIR)
   set(EIGEN3_INCLUDE_DIR $ENV{EIGEN3_ROOT_DIR})
 ENDIF() 
 
+find_package(Threads)             # for nanoflann
+
 include_directories(
  	${Boost_INCLUDE_DIR}
-        ${EIGEN3_INCLUDE_DIR}
+  ${EIGEN3_INCLUDE_DIR}
 	${CMAKE_CURRENT_SOURCE_DIR}
 	${CMAKE_CURRENT_SOURCE_DIR}/../framework
 	${CMAKE_CURRENT_SOURCE_DIR}/../hook
+	${CMAKE_CURRENT_SOURCE_DIR}/../nanoflann
 )
 
 link_directories(
@@ -41,5 +42,6 @@ add_executable(LittleSLAM
 target_link_libraries(LittleSLAM
   framework
   hook
+  Threads::Threads             # for nanoflann
 )
 

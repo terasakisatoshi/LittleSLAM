@@ -30,7 +30,7 @@ private:
   double a2;                      // オドメトリ共分散の係数
 
 public:
-  CovarianceCalculator() : dd(0.00001), da(0.00001) {
+  CovarianceCalculator() : dd(0.00001), da(0.00001), a1(1), a2(1) {
   }
 
   ~CovarianceCalculator() {

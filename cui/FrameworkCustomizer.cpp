@@ -198,6 +198,7 @@ void FrameworkCustomizer::customizeH() {
   sfront->setLoopDetector(lpd);
   sfront->setPointCloudMap(pcmap);
   sfront->setDgCheck(true);                        // センサ融合する
+//  sfront->setDgCheck(false);                        // センサ融合しない
 }
 
 // センサ融合とループ閉じ込みを追加
@@ -220,4 +221,175 @@ void FrameworkCustomizer::customizeI() {
   sfront->setLoopDetector(lpd);
   sfront->setPointCloudMap(pcmap);
   sfront->setDgCheck(true);                        // センサ融合する
+}
+
+// ガウスニュートン法
+void FrameworkCustomizer::customizeJ() {
+  pcmap = &pcmapLP;                                // 部分地図ごとに管理する点群地図
+  RefScanMaker *rsm = &rsmLM;                      // 局所地図を参照スキャンとする
+  DataAssociator *dass = &dassGT;                  // 格子テーブルによるデータ対応づけ
+  CostFunction *cfunc = &cfuncPD;                  // 垂直距離をコスト関数とする
+  PoseOptimizer *popt = &poptGN;                   // ガウスニュートン法による最適化
+  LoopDetector *lpd = &lpdSS;                      // 部分地図を用いたループ検出
+
+  popt->setCostFunction(cfunc);
+  poest.setDataAssociator(dass);
+  poest.setPoseOptimizer(popt);
+  pfu.setDataAssociator(dass);
+  smat.setPointCloudMap(pcmap);
+  smat.setRefScanMaker(rsm);
+  smat.setScanPointResampler(&spres);
+  smat.setScanPointAnalyser(&spana);
+  sfront->setLoopDetector(lpd);
+  sfront->setPointCloudMap(pcmap);
+  sfront->setDgCheck(true);                        // センサ融合する
+}
+
+// ロバストコスト関数。退化処理なし。ループ閉じ込みなし。
+void FrameworkCustomizer::customizeK() {
+  pcmap = &pcmapLP;                                // 部分地図ごとに管理する点群地図
+  RefScanMaker *rsm = &rsmLM;                      // 局所地図を参照スキャンとする
+  DataAssociator *dass = &dassGT;                  // 最近傍探索によるデータ対応づけ
+  CostFunction *cfunc = &cfuncPD;                  // 垂直距離をコスト関数とする
+  PoseOptimizer *popt = &poptGN;                   // ガウスニュートン法による最適化
+  LoopDetector *lpd = &lpdDM;                      // ダミーのループ検出
+
+//  dass->setDthre(2.0);
+  poptGN.setHasOutliers(true);                     // 外れ値を生成する
+  poptGN.setBeRobust(true);                        // ロバストコスト関数
+
+  popt->setCostFunction(cfunc);
+  poest.setDataAssociator(dass);
+  poest.setPoseOptimizer(popt);
+  pfu.setDataAssociator(dass);
+
+  smat2.setPointCloudMap(pcmap);
+  smat2.setRefScanMaker(rsm);
+  smat2.setScanPointResampler(&spres);
+  smat2.setScanPointAnalyser(&spana);
+  smat2.setPoseEstimator(&poest);
+  smat2.setPoseFuser(&pfu);
+
+  sfront->setLoopDetector(lpd);
+  sfront->setPointCloudMap(pcmap);
+  sfront->setScanMatcher(&smat2);
+}
+
+// MAP推定
+void FrameworkCustomizer::customizeL() {
+  pcmap = &pcmapLP;                                // 部分地図ごとに管理する点群地図
+  poptMAP.setPointCloudMap(pcmap);
+
+  RefScanMaker *rsm = &rsmLM;                      // 局所地図を参照スキャンとする
+  DataAssociator *dass = &dassGT;                  // 最近傍探索によるデータ対応づけ
+  CostFunction *cfunc = &cfuncPD;                  // 垂直距離をコスト関数とする
+  PoseOptimizer *popt1 = &poptMAP;                 // 逐次SLAM用。MAP推定あり
+  PoseOptimizer *popt2 = &poptGN;                  // ループ閉じ込み用。MAP推定なし
+  LoopDetector *lpd = &lpdSS;                      // 部分地図を用いたループ検出  
+  lpdSS.setPoseEstimator(&poest2);
+
+  popt1->setCostFunction(cfunc);
+  poest.setDataAssociator(dass);
+  poest.setPoseOptimizer(popt1);
+
+  popt2->setCostFunction(cfunc);
+  poest2.setDataAssociator(dass);
+  poest2.setPoseOptimizer(popt2);
+  pfu.setDataAssociator(dass);
+  
+  smat2.setPoseEstimator(&poest);
+  smat2.setPoseFuser(&pfu);
+  smat2.setPointCloudMap(pcmap);
+  smat2.setRefScanMaker(rsm);
+  smat2.setScanPointResampler(&spres);
+  smat2.setScanPointAnalyser(&spana);
+
+  sfront->setLoopDetector(lpd);
+  sfront->setPointCloudMap(pcmap);
+  sfront->setScanMatcher(&smat2);
+}
+
+// kd木
+void FrameworkCustomizer::customizeM() {
+  pcmap = &pcmapLP;                                // 部分地図ごとに管理する点群地図
+  poptMAP.setPointCloudMap(pcmap);
+
+  RefScanMaker *rsm = &rsmLM;                      // 局所地図を参照スキャンとする
+//  DataAssociator *dass = &dassLS;                  // 最近傍探索によるデータ対応づけ
+//  DataAssociator *dass = &dassGT;                  // 最近傍探索によるデータ対応づけ
+  DataAssociator *dass = &dassNN;                  // 最近傍探索によるデータ対応づけ
+  CostFunction *cfunc = &cfuncPD;                  // 垂直距離をコスト関数とする
+  PoseOptimizer *popt1 = &poptMAP;                 // 逐次SLAM用。MAP推定あり
+  PoseOptimizer *popt2 = &poptGN;                  // ループ閉じ込み用。MAP推定なし
+  LoopDetector *lpd = &lpdSS;                      // 部分地図を用いたループ検出  
+  lpdSS.setPoseEstimator(&poest2);
+
+//  dass->setDthre(2.0);
+//  poptMAP.setHasOutliers(true);                    // 外れ値を生成する
+//  poptMAP.setBeRobust(true);                       // dassのdthreが大きいときはtrueにした方がよい
+//  poptGN.setBeRobust(true);                        // dassのdthreが大きいときはtrueにした方がよい
+
+  popt1->setCostFunction(cfunc);
+  poest.setDataAssociator(dass);
+  poest.setPoseOptimizer(popt1);
+
+  popt2->setCostFunction(cfunc);
+  poest2.setDataAssociator(dass);
+  poest2.setPoseOptimizer(popt2);
+  pfu.setDataAssociator(dass);
+  
+  smat2.setPoseEstimator(&poest);
+  smat2.setPoseFuser(&pfu);
+  smat2.setPointCloudMap(pcmap);
+  smat2.setRefScanMaker(rsm);
+  smat2.setScanPointResampler(&spres);
+  smat2.setScanPointAnalyser(&spana);
+
+  sfront->setLoopDetector(lpd);
+  sfront->setPointCloudMap(pcmap);
+  sfront->setScanMatcher(&smat2);
+}
+
+// ロバストポーズ調整
+void FrameworkCustomizer::customizeN() {
+  pcmap = &pcmapLP;                                // 部分地図ごとに管理する点群地図
+  poptMAP.setPointCloudMap(pcmap);
+
+  RefScanMaker *rsm = &rsmLM;                      // 局所地図を参照スキャンとする
+  DataAssociator *dass = &dassNN;                  // 最近傍探索によるデータ対応づけ
+  CostFunction *cfunc = &cfuncPD;                  // 垂直距離をコスト関数とする
+  PoseOptimizer *popt1 = &poptMAP;                 // 逐次SLAM用。MAP推定あり
+  PoseOptimizer *popt2 = &poptGN;                  // ループ閉じ込み用。MAP推定なし
+  LoopDetector *lpd = &lpdSS;                      // 部分地図を用いたループ検出  
+  lpdSS.setPoseEstimator(&poest2);
+
+  dass->setDthre(2.0);
+//  poptMAP.setHasOutliers(true);                    // 外れ値を生成する
+  poptMAP.setBeRobust(true);                       // ロバストコスト関数
+//  poptGN.setHasOutliers(true);                     // ロバストコスト関数
+  poptGN.setBeRobust(true);                        // ロバストコスト関数
+
+  popt1->setCostFunction(cfunc);
+  poest.setDataAssociator(dass);
+  poest.setPoseOptimizer(popt1);
+
+  popt2->setCostFunction(cfunc);
+  poest2.setDataAssociator(dass);
+  poest2.setPoseOptimizer(popt2);
+  pfu.setDataAssociator(dass);
+  
+  smat2.setPoseEstimator(&poest);
+  smat2.setPoseFuser(&pfu);
+  smat2.setPointCloudMap(pcmap);
+  smat2.setRefScanMaker(rsm);
+  smat2.setScanPointResampler(&spres);
+  smat2.setScanPointAnalyser(&spana);
+
+  sfront->setLoopDetector(lpd);
+  sfront->setPointCloudMap(pcmap);
+  sfront->setScanMatcher(&smat2);
+  
+  SlamBackEnd *sback = sfront->getSlamBackend();
+  sback->setHasOutliers(true);
+  sback->setBeRobust(true);
 }

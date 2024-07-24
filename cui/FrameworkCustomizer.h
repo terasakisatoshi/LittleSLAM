@@ -21,14 +21,17 @@
 #include "RefScanMakerBS.h" 
 #include "RefScanMakerLM.h" 
 #include "DataAssociator.h" 
-#include "DataAssociatorLS.h" 
 #include "DataAssociatorGT.h" 
+#include "DataAssociatorLS.h" 
+#include "DataAssociatorNN.h"
 #include "CostFunction.h" 
 #include "CostFunctionED.h" 
 #include "CostFunctionPD.h" 
 #include "PoseOptimizer.h" 
 #include "PoseOptimizerSD.h" 
 #include "PoseOptimizerSL.h" 
+#include "PoseOptimizerGN.h" 
+#include "PoseOptimizerMAP.h" 
 #include "PointCloudMap.h" 
 #include "PointCloudMapBS.h" 
 #include "PointCloudMapGT.h" 
@@ -41,18 +44,23 @@
 #include "PoseFuser.h" 
 #include "ScanMatcher2D.h" 
 #include "SlamFrontEnd.h" 
+#include "SlamBackEnd.h" 
+#include "ScanMatcherRB.h"
 
 class FrameworkCustomizer
 {
   // フレームワーク改造用の部品
   RefScanMakerBS rsmBS;
   RefScanMakerLM rsmLM;
-  DataAssociatorLS dassLS;
   DataAssociatorGT dassGT;
+  DataAssociatorLS dassLS;
+  DataAssociatorNN dassNN;
   CostFunctionED cfuncED;
   CostFunctionPD cfuncPD;
   PoseOptimizerSD poptSD;
   PoseOptimizerSL poptSL;
+  PoseOptimizerGN poptGN;
+  PoseOptimizerMAP poptMAP;
   PointCloudMapBS pcmapBS;
   PointCloudMapGT pcmapGT;
   PointCloudMapLP pcmapLP;
@@ -63,12 +71,15 @@ class FrameworkCustomizer
   ScanPointAnalyser spana;
 
   PoseEstimatorICP poest;
+  PoseEstimatorICP poest2;
   PoseFuser pfu;
   ScanMatcher2D smat;
+  ScanMatcherRB smat2;
+
   SlamFrontEnd *sfront;
 
 public:
-  FrameworkCustomizer() : pcmap(nullptr) {
+  FrameworkCustomizer() : pcmap(nullptr), sfront(nullptr) {
   }
 
   ~FrameworkCustomizer() {
@@ -94,6 +105,11 @@ public:
   void customizeG();
   void customizeH();
   void customizeI();
+  void customizeJ();
+  void customizeK();
+  void customizeL();
+  void customizeM();
+  void customizeN();
 };
 
 #endif

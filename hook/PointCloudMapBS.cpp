@@ -34,7 +34,7 @@ void PointCloudMapBS::addPoints(const vector<LPoint2D> &lps) {
 
 // 全体地図生成。すでにできているので何もしない
 void PointCloudMapBS::makeGlobalMap(){
-  printf("globalMap.size=%lu\n", globalMap.size());   // 確認用
+  printf("globalMap.size=%zu\n", globalMap.size());   // 確認用
 }
 
 // 局所地図生成。ダミー

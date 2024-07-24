@@ -70,11 +70,12 @@ struct PoseArc
   PoseNode *dst;                      // このアークの終点側のノード
   Pose2D relPose;                     // このアークのもつ相対位置(計測値)
   Eigen::Matrix3d inf;                // 情報行列
+  double sw;                        // ロバスト化用のswitch変数
 
-  PoseArc(void) : src(nullptr), dst(nullptr){
+  PoseArc(void) : src(nullptr), dst(nullptr), sw(1) {
   }
 
-  PoseArc(PoseNode *s, PoseNode *d, Pose2D &rel, const Eigen::Matrix3d _inf) {
+  PoseArc(PoseNode *s, PoseNode *d, Pose2D &rel, const Eigen::Matrix3d _inf) : sw(1) {
     setup(s, d, rel, _inf);
   }
   

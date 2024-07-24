@@ -13,19 +13,14 @@
  ****************************************************************************/
 
 #include "SlamBackEnd.h"
-#include "P2oDriver2D.h"
 
 using namespace std;
 
 ////////// ポーズ調整 //////////
 
 Pose2D SlamBackEnd::adjustPoses() {
-//  pg->printArcs();
-//  pg->printNodes();
-
   newPoses.clear();
 
-  P2oDriver2D p2o;
   p2o.doP2o(*pg, newPoses, 5);                 // 5回くり返す
 
   return(newPoses.back());
@@ -41,7 +36,7 @@ void SlamBackEnd::remakeMaps() {
     PoseNode *pnode = pnodes[i];              // ノードはロボット位置と1:1対応
     pnode->setPose(npose);                    // 各ノードの位置を更新
   }
-  printf("newPoses.size=%lu, nodes.size=%lu\n", newPoses.size(), pnodes.size());
+  printf("newPoses.size=%zu, nodes.size=%zu\n", newPoses.size(), pnodes.size());
 
   // PointCloudMapの修正
   pcmap->remakeMaps(newPoses);

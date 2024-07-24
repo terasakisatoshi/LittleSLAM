@@ -21,6 +21,8 @@ using namespace std;
 
 // データ対応づけ固定のもと、初期値initPoseを与えてロボット位置の推定値estPoseを求める
 double PoseOptimizerSL::optimizePose(Pose2D &initPose, Pose2D &estPose) {
+  chrono_time t0 = clock();  
+
   double th = initPose.th;
   double tx = initPose.tx;
   double ty = initPose.ty;
@@ -64,6 +66,12 @@ double PoseOptimizerSL::optimizePose(Pose2D &initPose, Pose2D &estPose) {
 //  printf("nn=%d, evmin=%g\n", nn, evmin);       // 確認用
 
   estPose.setVal(txmin, tymin, thmin);            // 最小値を与える解を保存
+
+  chrono_time t1 = clock();  
+  totalTime += duration(t0, t1);
+  ++timeCnt;
+
+//  printf("Elapsed time: poptSL=%g\n", t1);
 
   return(evmin);
 }
