@@ -49,12 +49,13 @@ public:
   }
 
   void finishGnuplot() {
-    if (gp != nullptr)
+    if (gp != nullptr) {
 #ifdef _WIN32
       _pclose(gp);
 #elif __linux__
       pclose(gp);
 #endif
+    }
   }
 
   void setAspectRatio(double a) {
