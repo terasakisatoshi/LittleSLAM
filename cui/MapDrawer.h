@@ -37,7 +37,7 @@ public:
   ~MapDrawer() {
     finishGnuplot();
   }
-  
+
 /////////
 
   void initGnuplot() {
@@ -73,7 +73,7 @@ public:
   void setRange(double xR, double yR) {  // 描画範囲を±xR、±yRにする
     xmin = -xR;
     xmax = xR;
-    ymin = -yR; 
+    ymin = -yR;
     ymax = yR;
     fprintf(gp, "set xrange [%lf:%lf]\n", xmin, xmax);
     fprintf(gp, "set yrange [%lf:%lf]\n", ymin, ymax);
@@ -82,7 +82,7 @@ public:
   void setRange(double xm, double xM, double ym, double yM) {  // 描画範囲を全部指定
     xmin = xm;
     xmax = xM;
-    ymin = ym; 
+    ymin = ym;
     ymax = yM;
     fprintf(gp, "set xrange [%lf:%lf]\n", xmin, xmax);
     fprintf(gp, "set yrange [%lf:%lf]\n", ymin, ymax);

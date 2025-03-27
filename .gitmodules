@@ -1,3 +1,4 @@
 [submodule "p2o"]
 	path = p2o
 	url = https://github.com/furo-org/p2o.git
+	branch = main
