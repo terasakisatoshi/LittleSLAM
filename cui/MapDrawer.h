@@ -61,6 +61,8 @@ public:
       _pclose(gp);
 #elif __linux__
       pclose(gp);
+#elif __APPLE__
+      pclose(gp);
 #endif
     }
   }
