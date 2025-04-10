@@ -14,6 +14,7 @@ begin
 	lines = map(readlines(lscfile)) do _line
 		line = split(_line)
 		_laserscan = popfirst!(line)
+		@assert _laserscan == "LASERSCAN"
 		sid = popfirst!(line)
 		t1 = popfirst!(line)
 		t2 = popfirst!(line)
@@ -40,13 +41,18 @@ begin
 		y = distance .* sin.(angle)
 		(; angle, distance, x, y)
 	end
+
+	mx = minimum(minimum(getproperty.(scandata, :x)))
+	Mx = maximum(maximum(getproperty.(scandata, :x)))
+	my = minimum(minimum(getproperty.(scandata, :y)))
+	My = maximum(maximum(getproperty.(scandata, :y)))
 end
 
 # ╔═╡ 831454d6-98fc-4e0b-93ef-c5682086877e
 @gif for data in scandata
 	x = data.x
 	y = data.y
-	scatter(x, y)
+	scatter(x, y, xlims=[mx, Mx], ylims=[my, My])
 end
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
