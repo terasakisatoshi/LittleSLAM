@@ -45,8 +45,15 @@ public:
     gp = _popen("gnuplot", "w");      // パイプオープン.Windows
 #elif __linux__
     gp = popen("gnuplot", "w");       // パイプオープン.Linux
+#elif __APPLE__
+    gp = popen("gnuplot", "w");       // パイプオープン.macOS
+#else
+    if (gp == nullptr) {
+      fprintf(stderr, "Error: Could not open gnuplot pipe.\n");
+      exit(1);
+    }
 #endif
-  }
+}
 
   void finishGnuplot() {
     if (gp != nullptr) {
